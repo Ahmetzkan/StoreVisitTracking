@@ -15,7 +15,6 @@ namespace StoreVisitTracking.Infrastructure.EntityConfigurations
             builder.Property(u => u.Username).HasColumnName("Username").IsRequired().HasMaxLength(100);
             builder.Property(u => u.PasswordHash).HasColumnName("PasswordHash").IsRequired();
             builder.Property(u => u.Role).HasColumnName("Role").IsRequired();
-            builder.Property(u => u.IsActive).HasColumnName("IsActive").IsRequired().HasDefaultValue(true);
 
             builder.HasIndex(u => u.Username).IsUnique(); 
         }

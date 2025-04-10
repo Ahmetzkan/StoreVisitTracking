@@ -64,7 +64,7 @@ builder.Services.AddSwaggerGen(opt =>
 
 var app = builder.Build();
 
-app.MapGet("/", () => Results.Redirect("/swagger"));
+app.MapGet("", () => Results.Redirect("/swagger"));
 
 if (app.Environment.IsDevelopment())
 {

@@ -9,7 +9,6 @@ public class User
     public string Username { get; set; }
     public string PasswordHash { get; set; }
     public UserRole Role { get; set; }
-    public bool IsActive { get; set; } = true; 
     public DateTime CreatedAt { get; set; }
 
     public ICollection<Visit> Visits { get; set; } = new List<Visit>();

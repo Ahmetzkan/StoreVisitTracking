@@ -57,8 +57,6 @@ public class AuthService : IAuthService
             throw new Exception("Kullanıcı adı veya şifre hatalı");
         }
 
-        if (!user.IsActive) { new Exception("Hesabınız aktif değil"); }
-
         var token = _jwtService.GenerateToken(user);
         return new AuthResponseDto
         {
