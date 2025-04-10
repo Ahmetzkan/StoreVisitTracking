@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.API", "StoreVisitTracking.API\StoreVisitTracking.API.csproj", "{C0683C23-E9C9-4610-8603-FE2A1C2E78BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Application", "StoreVisitTracking.Application\StoreVisitTracking.Application.csproj", "{6B1671F9-00BE-42BB-877F-354567416BC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Domain", "StoreVisitTracking.Domain\StoreVisitTracking.Domain.csproj", "{53238140-F7F6-4012-BFCC-C4B9DEA2767C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Infrastructure", "StoreVisitTracking.Infrastructure\StoreVisitTracking.Infrastructure.csproj", "{5BE12581-32A1-4C6C-AE30-91FD39CC5232}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Core", "StoreVisitTracking.Core\StoreVisitTracking.Core.csproj", "{76F30D3E-F215-41FD-977E-763FA0BC33CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Tests", "StoreVisitTracking.Tests\StoreVisitTracking.Tests.csproj", "{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0683C23-E9C9-4610-8603-FE2A1C2E78BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0683C23-E9C9-4610-8603-FE2A1C2E78BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0683C23-E9C9-4610-8603-FE2A1C2E78BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0683C23-E9C9-4610-8603-FE2A1C2E78BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B1671F9-00BE-42BB-877F-354567416BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B1671F9-00BE-42BB-877F-354567416BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B1671F9-00BE-42BB-877F-354567416BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B1671F9-00BE-42BB-877F-354567416BC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53238140-F7F6-4012-BFCC-C4B9DEA2767C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53238140-F7F6-4012-BFCC-C4B9DEA2767C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53238140-F7F6-4012-BFCC-C4B9DEA2767C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53238140-F7F6-4012-BFCC-C4B9DEA2767C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BE12581-32A1-4C6C-AE30-91FD39CC5232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BE12581-32A1-4C6C-AE30-91FD39CC5232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BE12581-32A1-4C6C-AE30-91FD39CC5232}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BE12581-32A1-4C6C-AE30-91FD39CC5232}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76F30D3E-F215-41FD-977E-763FA0BC33CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76F30D3E-F215-41FD-977E-763FA0BC33CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76F30D3E-F215-41FD-977E-763FA0BC33CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76F30D3E-F215-41FD-977E-763FA0BC33CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7G8H9I0J-1K2L-3M4N-5O6P-7Q8R9S0T1U2}
+	EndGlobalSection
+EndGlobal
