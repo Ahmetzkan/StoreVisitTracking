@@ -4,5 +4,4 @@ public enum VisitStatus
 {
     InProgress,
     Completed,
-    Cancelled
 } 

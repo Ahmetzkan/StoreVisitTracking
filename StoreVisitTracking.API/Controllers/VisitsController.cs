@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StoreVisitTracking.Application.DTOs.Photo;
 using StoreVisitTracking.Application.DTOs.Visit;
+using StoreVisitTracking.Application.Paginate;
 using StoreVisitTracking.Domain.Entities;
 using System.Security.Claims;
 
@@ -17,7 +18,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Roles = "Standard")]
+    [Authorize(Roles = "Standard")]
     public async Task<IActionResult> Create([FromBody] CreateVisitDto dto)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -26,18 +27,20 @@ public class VisitsController : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize]
-    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    [Authorize]
+    public async Task<IActionResult> GetAll([FromQuery] PageRequest pageRequest)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         var isAdmin = User.IsInRole("Admin");
-        var result = await _visitService.GetAllAsync(userId, isAdmin, page, pageSize);
+
+        var result = await _visitService.GetAllAsync(userId, isAdmin, pageRequest);
         return Ok(result);
     }
 
+
     [HttpGet("{visitId}")]
-    //[Authorize]
-    public async Task<IActionResult> Get(Guid visitId)
+    [Authorize]
+    public async Task<IActionResult> GetById(Guid visitId)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         var isAdmin = User.IsInRole("Admin");
@@ -46,7 +49,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpPost("{visitId}/photos")]
-    //[Authorize(Roles = "Standard")]
+    [Authorize(Roles = "Standard")]
     public async Task<IActionResult> UploadPhoto(Guid visitId, [FromBody] PhotoDto dto)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -55,8 +58,8 @@ public class VisitsController : ControllerBase
     }
 
     [HttpPut("{visitId}/complete")]
-    //[Authorize(Roles = "Standard")]
-    public async Task<IActionResult> Complete(Guid visitId)
+    [Authorize(Roles = "Standard")]
+    public async Task<IActionResult> CompleteVisit(Guid visitId)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         await _visitService.CompleteVisitAsync(userId, visitId);

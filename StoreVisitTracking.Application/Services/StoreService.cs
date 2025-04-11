@@ -3,9 +3,12 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StoreVisitTracking.Application.DTOs;
 using StoreVisitTracking.Application.DTOs.Store;
+using StoreVisitTracking.Application.DTOs.Visit;
 using StoreVisitTracking.Application.Interfaces;
+using StoreVisitTracking.Application.Paginate;
 using StoreVisitTracking.Domain.Entities;
 using StoreVisitTracking.Infrastructure;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 public class StoreService : IStoreService
 {
@@ -22,15 +25,12 @@ public class StoreService : IStoreService
         _updateValidator = updateValidator;
     }
 
-    public async Task<IEnumerable<GetAllStoreDto>> GetAllAsync(int page, int pageSize)
+    public async Task<IPaginate<GetAllStoreDto>> GetAllAsync(PageRequest pageRequest)
     {
-        var stores = await _context.Stores
-            .OrderByDescending(s => s.CreatedAt)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        var query = _context.Stores.AsQueryable();
+        var result = await query.ToPaginateAsync(pageRequest.PageIndex, pageRequest.PageSize);
 
-        return _mapper.Map<IEnumerable<GetAllStoreDto>>(stores);
+        return result.MapPaginate<Store, GetAllStoreDto>(_mapper);
     }
 
     public async Task CreateAsync(CreateStoreDto dto)

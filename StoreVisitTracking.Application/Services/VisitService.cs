@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StoreVisitTracking.Application.DTOs.Photo;
 using StoreVisitTracking.Application.DTOs.Visit;
+using StoreVisitTracking.Application.Paginate;
 using StoreVisitTracking.Domain.Entities;
 using StoreVisitTracking.Domain.Enums;
 using StoreVisitTracking.Infrastructure;
@@ -35,18 +36,21 @@ public class VisitService : IVisitService
         await _context.SaveChangesAsync();
     }
 
-
-    public async Task<IEnumerable<GetVisitDto>> GetAllAsync(Guid userId, bool isAdmin, int page, int pageSize)
+    public async Task<IPaginate<GetVisitDto>> GetAllAsync(Guid userId, bool isAdmin, PageRequest pageRequest)
     {
         var query = _context.Visits
             .Include(v => v.Store)
-            .Include(v => v.Photos).ThenInclude(p => p.Product) 
+            .Include(v => v.Photos)
+                .ThenInclude(p => p.Product)
             .AsQueryable();
 
-        if (!isAdmin) query = query.Where(v => v.UserId == userId);
+        if (!isAdmin) { query = query.Where(v => v.UserId == userId); }
 
-        var result = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-        return _mapper.Map<IEnumerable<GetVisitDto>>(result);
+        var result = await query
+            .OrderByDescending(v => v.VisitDate)
+            .ToPaginateAsync(pageRequest.PageIndex, pageRequest.PageSize);
+
+        return result.MapPaginate<Visit, GetVisitDto>(_mapper);
     }
 
 
@@ -63,6 +67,19 @@ public class VisitService : IVisitService
         if (!isAdmin && visit.UserId != userId) throw new UnauthorizedAccessException();
 
         return _mapper.Map<GetVisitDto>(visit);
+    }
+
+    public async Task<IPaginate<GetVisitDto>> GetUserVisitsAsync(Guid userId, PageRequest pageRequest)
+    {
+        var visits = await _context.Visits
+            .Include(v => v.Store)
+            .Include(v => v.Photos)
+                .ThenInclude(p => p.Product)
+            .Where(v => v.UserId == userId)
+            .OrderByDescending(v => v.VisitDate)
+            .ToPaginateAsync(pageRequest.PageIndex, pageRequest.PageSize);
+
+        return visits.MapPaginate<Visit, GetVisitDto>(_mapper);
     }
 
     public async Task UploadPhotoAsync(Guid userId, Guid visitId, PhotoDto photoDto)

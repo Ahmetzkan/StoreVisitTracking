@@ -18,6 +18,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    /*
     //[Authorize(Roles = "Admin")]
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto registerDto)
@@ -25,13 +26,14 @@ public class AuthController : ControllerBase
         var result = await _authService.RegisterAsync(registerDto);
         return Ok(result);
     }
+    */
 
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDto>> Login(LoginDto loginDto)
     {
 
-            var result = await _authService.LoginAsync(loginDto);
-            return Ok(result);
+        var result = await _authService.LoginAsync(loginDto);
+        return Ok(result);
     }
 
     [HttpPost("autoLoginAdmin")]
@@ -40,7 +42,7 @@ public class AuthController : ControllerBase
         var loginDto = new LoginDto
         {
             Username = "admin",
-            Password = "admin"  
+            Password = "admin"
         };
 
         var result = await _authService.LoginAsync(loginDto);
@@ -58,19 +60,5 @@ public class AuthController : ControllerBase
         };
         var result = await _authService.LoginAsync(loginDto);
         return Ok(result);
-    }
-
-    [Authorize(Roles = "Admin")]
-    [HttpGet("admin-test")]
-    public ActionResult AdminTest()
-    {
-        return Ok(new { message = "Admin erişimi başarılı" });
-    }
-
-    [Authorize]
-    [HttpGet("user-test")]
-    public ActionResult UserTest()
-    {
-        return Ok(new { message = "Kullanıcı erişimi başarılı" });
     }
 }

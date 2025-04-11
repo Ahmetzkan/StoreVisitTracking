@@ -2,6 +2,8 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StoreVisitTracking.Application.DTOs.Product;
+using StoreVisitTracking.Application.DTOs.Visit;
+using StoreVisitTracking.Application.Paginate;
 using StoreVisitTracking.Domain.Entities;
 using StoreVisitTracking.Infrastructure;
 
@@ -17,16 +19,12 @@ public class ProductService : IProductService
         _mapper = mapper;
         _validator = validator;
     }
-
-    public async Task<IEnumerable<GetAllProductDto>> GetAllAsync(int page, int pageSize)
+    public async Task<IPaginate<GetAllProductDto>> GetAllAsync(PageRequest pageRequest)
     {
-        var products = await _context.Products
-            .OrderByDescending(p => p.CreatedAt)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        var query = _context.Products.AsQueryable();
+        var paginatedResult = await query.ToPaginateAsync(pageRequest.PageIndex, pageRequest.PageSize);
 
-        return _mapper.Map<IEnumerable<GetAllProductDto>>(products);
+        return paginatedResult.MapPaginate<Product, GetAllProductDto>(_mapper);
     }
 
     public async Task CreateAsync(CreateProductDto dto)

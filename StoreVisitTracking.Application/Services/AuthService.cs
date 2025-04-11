@@ -20,6 +20,7 @@ public class AuthService : IAuthService
         _jwtService = jwtService;
     }
 
+    /*
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
     {
         if (await _context.Users.AnyAsync(u => u.Username == registerDto.Username))
@@ -48,6 +49,7 @@ public class AuthService : IAuthService
             Expiration = DateTime.UtcNow.AddMinutes(60)
         };
     }
+    */
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
     {

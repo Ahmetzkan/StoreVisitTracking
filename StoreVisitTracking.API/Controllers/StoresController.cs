@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StoreVisitTracking.Application.DTOs;
 using StoreVisitTracking.Application.DTOs.Store;
 using StoreVisitTracking.Application.Interfaces;
+using StoreVisitTracking.Application.Paginate;
 
 namespace StoreVisitTracking.API.Controllers;
 
@@ -19,9 +20,9 @@ public class StoresController : ControllerBase
 
     [HttpGet]
     //[Authorize]
-    public async Task<IActionResult> GetStores([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetAll([FromQuery] PageRequest pageRequest)
     {
-        var result = await _storeService.GetAllAsync(page, pageSize);
+        var result = await _storeService.GetAllAsync(pageRequest);
         return Ok(result);
     }
 

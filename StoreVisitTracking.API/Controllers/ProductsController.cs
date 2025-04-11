@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreVisitTracking.Application.DTOs.Product;
+using StoreVisitTracking.Application.Paginate;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -15,9 +16,9 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     //[Authorize]
-    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetAll([FromQuery] PageRequest pageRequest)
     {
-        var result = await _productService.GetAllAsync(page, pageSize);
+        var result = await _productService.GetAllAsync(pageRequest);
         return Ok(result);
     }
 
