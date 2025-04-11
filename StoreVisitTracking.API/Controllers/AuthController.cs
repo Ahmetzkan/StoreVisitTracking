@@ -18,6 +18,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    //[Authorize(Roles = "Admin")]
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto registerDto)
     {
@@ -31,6 +32,32 @@ public class AuthController : ControllerBase
 
             var result = await _authService.LoginAsync(loginDto);
             return Ok(result);
+    }
+
+    [HttpPost("autoLoginAdmin")]
+    public async Task<ActionResult<AuthResponseDto>> LoginAdmin()
+    {
+        var loginDto = new LoginDto
+        {
+            Username = "admin",
+            Password = "admin"  
+        };
+
+        var result = await _authService.LoginAsync(loginDto);
+        return Ok(result);
+    }
+
+
+    [HttpPost("autoLoginStandart")]
+    public async Task<ActionResult<AuthResponseDto>> LoginStandart()
+    {
+        var loginDto = new LoginDto
+        {
+            Username = "standartuser",
+            Password = "standartuser"
+        };
+        var result = await _authService.LoginAsync(loginDto);
+        return Ok(result);
     }
 
     [Authorize(Roles = "Admin")]

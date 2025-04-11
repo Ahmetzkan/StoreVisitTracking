@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using StoreVisitTracking.Application.Interfaces;
 using StoreVisitTracking.Application.Settings;
 using StoreVisitTracking.Domain.Entities;
 using StoreVisitTracking.Domain.Enums;

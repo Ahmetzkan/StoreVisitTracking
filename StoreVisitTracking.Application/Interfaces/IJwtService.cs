@@ -1,7 +1,7 @@
 using StoreVisitTracking.Domain.Entities;
 using StoreVisitTracking.Domain.Enums;
 
-namespace StoreVisitTracking.Application.Services;
+namespace StoreVisitTracking.Application.Interfaces;
 
 public interface IJwtService
 {

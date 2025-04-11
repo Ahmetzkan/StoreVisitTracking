@@ -19,11 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\StoreVisitTracking.Application\StoreVisitTracking.Application.csproj" />
     <ProjectReference Include="..\StoreVisitTracking.Infrastructure\StoreVisitTracking.Infrastructure.csproj" />
   </ItemGroup>

@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StoreVisitTracking.API\StoreVisitTracking.API.csproj" />
-    <ProjectReference Include="..\StoreVisitTracking.Core\StoreVisitTracking.Core.csproj" />
     <ProjectReference Include="..\StoreVisitTracking.Infrastructure\StoreVisitTracking.Infrastructure.csproj" />
   </ItemGroup>
 

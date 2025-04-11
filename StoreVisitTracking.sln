@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Domain",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Infrastructure", "StoreVisitTracking.Infrastructure\StoreVisitTracking.Infrastructure.csproj", "{5BE12581-32A1-4C6C-AE30-91FD39CC5232}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Core", "StoreVisitTracking.Core\StoreVisitTracking.Core.csproj", "{76F30D3E-F215-41FD-977E-763FA0BC33CA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreVisitTracking.Tests", "StoreVisitTracking.Tests\StoreVisitTracking.Tests.csproj", "{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}"
 EndProject
 Global
@@ -37,10 +35,6 @@ Global
 		{5BE12581-32A1-4C6C-AE30-91FD39CC5232}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BE12581-32A1-4C6C-AE30-91FD39CC5232}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BE12581-32A1-4C6C-AE30-91FD39CC5232}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76F30D3E-F215-41FD-977E-763FA0BC33CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76F30D3E-F215-41FD-977E-763FA0BC33CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76F30D3E-F215-41FD-977E-763FA0BC33CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76F30D3E-F215-41FD-977E-763FA0BC33CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AC2F0C3-F13B-47EB-86FE-6AF7952D6C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU

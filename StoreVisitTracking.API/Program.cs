@@ -10,8 +10,18 @@ using Microsoft.EntityFrameworkCore;
 using StoreVisitTracking.Application.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using StoreVisitTracking.Application;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("myPolicy",
+    builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
 
 var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
@@ -19,9 +29,9 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
 builder.Services.AddBusinessServices();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    .AddJwtBearer(opt =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        opt.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
@@ -34,8 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddDbContext<StoreVisitTrackingDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+builder.Services.AddDbContext<StoreVisitTrackingDbContext>(opt =>
+    opt.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     new MySqlServerVersion(new Version(8, 0, 2))));
 
 builder.Services.AddControllers();
@@ -62,24 +72,26 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
-var app = builder.Build();
+builder.Services.AddEndpointsApiExplorer();
 
-app.MapGet("", () => Results.Redirect("/swagger"));
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    app.UseSwaggerUI(opt =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Store Visit Tracking API v1");
-        c.RoutePrefix = "swagger";
+        opt.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+        opt.DocExpansion(DocExpansion.None);
     });
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("myPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
