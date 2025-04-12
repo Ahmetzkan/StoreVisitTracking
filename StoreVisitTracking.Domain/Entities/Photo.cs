@@ -1,4 +1,4 @@
-using StoreVisitTracking.Domain.Entities;
+﻿using StoreVisitTracking.Domain.Entities;
 
 public class Photo
 {

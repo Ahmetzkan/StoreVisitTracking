@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreVisitTracking.Infrastructure;
@@ -12,7 +11,7 @@ using StoreVisitTracking.Infrastructure;
 namespace StoreVisitTracking.Infrastructure.Migrations
 {
     [DbContext(typeof(StoreVisitTrackingDbContext))]
-    [Migration("20250410194906_InitialCreate")]
+    [Migration("20250412213002_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,10 +19,8 @@ namespace StoreVisitTracking.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("Photo", b =>
                 {
@@ -127,12 +124,6 @@ namespace StoreVisitTracking.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("IsActive");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()

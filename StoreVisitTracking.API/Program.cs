@@ -1,97 +1,121 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using StoreVisitTracking.Application.DTOs.Auth;
-using StoreVisitTracking.Application.Interfaces;
-using StoreVisitTracking.Domain.Entities;
-using StoreVisitTracking.Infrastructure;
-using System.Text;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
-using StoreVisitTracking.Application.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 using StoreVisitTracking.Application;
-using Swashbuckle.AspNetCore.SwaggerUI;
+using StoreVisitTracking.Infrastructure;
+using StoreVisitTracking.Application.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("myPolicy",
-    builder =>
-    {
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
-});
-
-var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
-
-builder.Services.AddBusinessServices();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(opt =>
-    {
-        opt.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-            ValidateIssuer = true,
-            ValidIssuer = jwtSettings.Issuer,
-            ValidateAudience = true,
-            ValidAudience = jwtSettings.Audience,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
-
-builder.Services.AddDbContext<StoreVisitTrackingDbContext>(opt =>
-    opt.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    new MySqlServerVersion(new Version(8, 0, 2))));
-
+// Add services to the container
 builder.Services.AddControllers();
 
+// Configure JWT Settings
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+
+// Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(opt =>
+builder.Services.AddSwaggerGen(c =>
 {
-    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "StoreVisitTracking API", Version = "v1" });
+
+    // Add JWT Bearer authentication to Swagger
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
+        Description = "JWT Authorization header using the Bearer scheme",
         Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Please enter token"
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer"
     });
-    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
-                { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
-            new string[] { }
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
         }
     });
 });
 
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddApplicationServices();
+
+// Configure DbContext with retry policy
+builder.Services.AddDbContext<StoreVisitTrackingDbContext>(options =>
+{
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(8, 0, 0)),
+        mysqlOptions =>
+        {
+            mysqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 2,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null);
+            mysqlOptions.MigrationsAssembly(typeof(StoreVisitTrackingDbContext).Assembly.FullName);
+        });
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+});
+
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddMySql(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+        name: "mysql",
+        failureStatus: HealthStatus.Unhealthy,
+        tags: new[] { "db", "mysql" })
+    .AddRedis(
+        redisConnectionString: builder.Configuration["Redis:Configuration"],
+        name: "redis",
+        failureStatus: HealthStatus.Unhealthy,
+        tags: new[] { "cache", "redis" });
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(opt =>
+    app.UseSwaggerUI(c =>
     {
-        opt.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
-        opt.DocExpansion(DocExpansion.None);
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "StoreVisitTracking API v1");
+        c.RoutePrefix = "swagger";
     });
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
-app.UseCors("myPolicy");
-app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Health check endpoint
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsJsonAsync(new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString(),
+                exception = e.Value.Exception?.Message,
+                duration = e.Value.Duration
+            }),
+            totalDuration = report.TotalDuration
+        });
+    }
+});
 
 app.Run();

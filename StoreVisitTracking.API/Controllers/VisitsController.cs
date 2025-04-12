@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StoreVisitTracking.Application.DTOs.Photo;
 using StoreVisitTracking.Application.DTOs.Visit;
+using StoreVisitTracking.Application.Interfaces;
 using StoreVisitTracking.Application.Paginate;
 using StoreVisitTracking.Domain.Entities;
 using System.Security.Claims;
@@ -11,19 +12,12 @@ using System.Security.Claims;
 public class VisitsController : ControllerBase
 {
     private readonly IVisitService _visitService;
+    private readonly ICacheService _cacheService;
 
-    public VisitsController(IVisitService visitService)
+    public VisitsController(IVisitService visitService, ICacheService cacheService)
     {
         _visitService = visitService;
-    }
-
-    [HttpPost]
-    [Authorize(Roles = "Standard")]
-    public async Task<IActionResult> Create([FromBody] CreateVisitDto dto)
-    {
-        var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-        await _visitService.CreateAsync(userId, dto);
-        return Ok(new { message = "Visit created successfully" });
+        _cacheService = cacheService;
     }
 
     [HttpGet]
@@ -33,8 +27,34 @@ public class VisitsController : ControllerBase
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         var isAdmin = User.IsInRole("Admin");
 
+        var cacheKey = $"visits_{userId}_{isAdmin}_{pageRequest.PageIndex}_{pageRequest.PageSize}";
+
+        if (await _cacheService.ExistsAsync(cacheKey))
+        {
+            return Ok(await _cacheService.GetAsync<IPaginate<GetVisitDto>>(cacheKey));
+        }
+
         var result = await _visitService.GetAllAsync(userId, isAdmin, pageRequest);
+
+        if (!isAdmin) // Only cache non-admin requests
+        {
+            await _cacheService.SetAsync(cacheKey, result, TimeSpan.FromMinutes(5));
+        }
+
         return Ok(result);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Standard")]
+    public async Task<IActionResult> Create([FromBody] CreateVisitDto dto)
+    {
+        var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        await _visitService.CreateAsync(userId, dto);
+
+        // Clear all visits cache for this user
+        await _cacheService.RemoveByPrefixAsync($"visits_{userId}_");
+
+        return Ok(new { message = "Visit created successfully" });
     }
 
 

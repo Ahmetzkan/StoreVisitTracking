@@ -15,8 +15,8 @@ namespace StoreVisitTracking.Infrastructure
         public DbSet<Product> Products { get; set; }
         public DbSet<Photo> Photos { get; set; }
 
-        public StoreVisitTrackingDbContext(DbContextOptions dbContextOptions, IConfiguration configuration)
-            : base(dbContextOptions)
+        public StoreVisitTrackingDbContext(DbContextOptions<StoreVisitTrackingDbContext> options, IConfiguration configuration)
+               : base(options)
         {
             _configuration = configuration;
         }
