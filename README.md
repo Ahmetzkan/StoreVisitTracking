@@ -79,6 +79,8 @@ cd StoreVisitTracking
 Uygulama aşağıdaki URL'ler üzerinden erişilebilir:
 https://localhost:7047/swagger
 
+- Önemli not swaggerda authorize olmak için loginden dönen tokeni sağ üst kısımdaki Authorize butonuna yapıştırmanız gerekmektedir.
+
 ## Test
 
 Projeyi test etmek için:
