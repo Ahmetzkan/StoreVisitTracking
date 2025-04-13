@@ -1,7 +1,7 @@
 # Store Visit Tracking
 
 Bu proje, mağaza ziyaretlerinin takibini sağlayan bir web uygulamasıdır. .NET 8.0 kullanılarak geliştirilmiştir.
-- Servisler normalde dockerda ayağa kaldırılıcaktı fakat vaktimin kalmaması nedeniyle çokca uğraştığım bir hatayı çözmeye zamanım kaldı. Bundan kaynaklı servisler local de çalışmaktadır.
+- Servisler normalde dockerda ayağa kaldırılıcaktı fakat vaktimin kalmaması nedeniyle çokca uğraştığım bir hatayı çözmeye zamanım kalmadı. Bundan kaynaklı servisler local de çalışmaktadır.
 
 ## Gereksinimler
 
