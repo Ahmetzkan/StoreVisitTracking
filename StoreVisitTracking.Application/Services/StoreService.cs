@@ -5,6 +5,7 @@ using StoreVisitTracking.Application.DTOs;
 using StoreVisitTracking.Application.DTOs.Store;
 using StoreVisitTracking.Application.DTOs.Visit;
 using StoreVisitTracking.Application.Interfaces;
+using StoreVisitTracking.Application.Messages;
 using StoreVisitTracking.Application.Paginate;
 using StoreVisitTracking.Domain.Entities;
 using StoreVisitTracking.Infrastructure;
@@ -50,7 +51,7 @@ public class StoreService : IStoreService
         await _updateValidator.ValidateAndThrowAsync(dto);
 
         var store = await _context.Stores.FindAsync(id);
-        if (store == null) throw new Exception("Store not found");
+        if (store == null) throw new Exception(ApplicationMessages.StoreNotFound);
 
         _mapper.Map(dto, store);
         await _context.SaveChangesAsync();
@@ -59,7 +60,7 @@ public class StoreService : IStoreService
     public async Task DeleteAsync(Guid id)
     {
         var store = await _context.Stores.FindAsync(id);
-        if (store == null) throw new Exception("Store not found");
+        if (store == null) throw new Exception(ApplicationMessages.StoreNotFound);
 
         _context.Stores.Remove(store);
         await _context.SaveChangesAsync();

@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StoreVisitTracking.Application.DTOs.Photo;
 using StoreVisitTracking.Application.DTOs.Visit;
+using StoreVisitTracking.Application.Messages;
 using StoreVisitTracking.Application.Paginate;
 using StoreVisitTracking.Domain.Entities;
 using StoreVisitTracking.Domain.Enums;
@@ -62,9 +63,9 @@ public class VisitService : IVisitService
             .ThenInclude(p => p.Product)
             .FirstOrDefaultAsync(v => v.Id == visitId);
 
-        if (visit == null) throw new Exception("Visit not found");
+        if (visit == null) throw new Exception(ApplicationMessages.VisitNotFound);
 
-        if (!isAdmin && visit.UserId != userId) throw new UnauthorizedAccessException();
+        if (!isAdmin && visit.UserId != userId) throw new UnauthorizedAccessException(ApplicationMessages.UnauthorizedAccess);
 
         return _mapper.Map<GetVisitDto>(visit);
     }
@@ -86,7 +87,7 @@ public class VisitService : IVisitService
     {
         await _photoValidator.ValidateAndThrowAsync(photoDto);
         var visit = await _context.Visits.FindAsync(visitId);
-        if (visit == null || visit.UserId != userId) throw new UnauthorizedAccessException();
+        if (visit == null || visit.UserId != userId) throw new UnauthorizedAccessException(ApplicationMessages.UnauthorizedAccess);
 
         var photo = _mapper.Map<Photo>(photoDto);
         photo.Id = Guid.NewGuid();
@@ -100,7 +101,7 @@ public class VisitService : IVisitService
     public async Task CompleteVisitAsync(Guid userId, Guid visitId)
     {
         var visit = await _context.Visits.FindAsync(visitId);
-        if (visit == null || visit.UserId != userId) throw new UnauthorizedAccessException();
+        if (visit == null || visit.UserId != userId) throw new UnauthorizedAccessException(ApplicationMessages.UnauthorizedAccess);
 
         visit.Status = VisitStatus.Completed;
         await _context.SaveChangesAsync();

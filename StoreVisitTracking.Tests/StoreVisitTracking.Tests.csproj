@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.6.6" />
@@ -23,12 +24,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StoreVisitTracking.API\StoreVisitTracking.API.csproj" />
+    <ProjectReference Include="..\StoreVisitTracking.Domain\StoreVisitTracking.Domain.csproj" />
     <ProjectReference Include="..\StoreVisitTracking.Infrastructure\StoreVisitTracking.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project> 

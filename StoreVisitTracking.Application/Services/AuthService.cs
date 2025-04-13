@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using StoreVisitTracking.Application.DTOs.Auth;
 using StoreVisitTracking.Application.Interfaces;
+using StoreVisitTracking.Application.Messages;
 using StoreVisitTracking.Domain.Entities;
 using StoreVisitTracking.Infrastructure;
 
@@ -20,12 +21,11 @@ public class AuthService : IAuthService
         _jwtService = jwtService;
     }
 
-    
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
     {
         if (await _context.Users.AnyAsync(u => u.Username == registerDto.Username))
         {
-            throw new Exception("Bu kullanıcı adı zaten kullanılıyor");
+            throw new Exception(ApplicationMessages.ThisUsernameIsAlreadyInUse);
         }
 
         var user = new User
@@ -49,14 +49,13 @@ public class AuthService : IAuthService
             Expiration = DateTime.UtcNow.AddMinutes(60)
         };
     }
-   
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
         if (user == null || !VerifyPassword(loginDto.Password, user.PasswordHash))
         {
-            throw new Exception("Kullanıcı adı veya şifre hatalı");
+            throw new Exception(ApplicationMessages.UsernameOrPasswordIsWrong);
         }
 
         var token = _jwtService.GenerateToken(user);

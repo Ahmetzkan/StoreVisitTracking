@@ -17,12 +17,12 @@ namespace StoreVisitTracking.Application.Services
     {
         private readonly IDatabase _database;
         private readonly string _instanceName;
-        private readonly ConnectionMultiplexer _redis;
+        private readonly IConnectionMultiplexer _redis;
         private readonly IServer _server;
 
-        public RedisCacheService(IOptions<RedisSettings> redisSettings)
+        public RedisCacheService(IOptions<RedisSettings> redisSettings, IConnectionMultiplexer redis)
         {
-            _redis = ConnectionMultiplexer.Connect(redisSettings.Value.Configuration);
+            _redis = redis;
             _database = _redis.GetDatabase();
             _server = _redis.GetServer(_redis.GetEndPoints().First());
             _instanceName = redisSettings.Value.InstanceName;

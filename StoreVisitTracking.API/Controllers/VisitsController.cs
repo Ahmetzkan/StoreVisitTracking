@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoreVisitTracking.API.Messages;
 using StoreVisitTracking.Application.DTOs.Photo;
 using StoreVisitTracking.Application.DTOs.Visit;
 using StoreVisitTracking.Application.Interfaces;
@@ -36,7 +37,7 @@ public class VisitsController : ControllerBase
 
         var result = await _visitService.GetAllAsync(userId, isAdmin, pageRequest);
 
-        if (!isAdmin) // Only cache non-admin requests
+        if (!isAdmin) 
         {
             await _cacheService.SetAsync(cacheKey, result, TimeSpan.FromMinutes(5));
         }
@@ -45,16 +46,15 @@ public class VisitsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Standard")]
+    [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateVisitDto dto)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         await _visitService.CreateAsync(userId, dto);
 
-        // Clear all visits cache for this user
         await _cacheService.RemoveByPrefixAsync($"visits_{userId}_");
 
-        return Ok(new { message = "Visit created successfully" });
+        return Ok(APIMessages.VisitCreatedSuccesfully);
     }
 
 
@@ -69,20 +69,20 @@ public class VisitsController : ControllerBase
     }
 
     [HttpPost("{visitId}/photos")]
-    [Authorize(Roles = "Standard")]
+    [Authorize]
     public async Task<IActionResult> UploadPhoto(Guid visitId, [FromBody] PhotoDto dto)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         await _visitService.UploadPhotoAsync(userId, visitId, dto);
-        return Ok(new { message = "Photo uploaded successfully" });
+        return Ok(APIMessages.PhotoUploadedSuccesfully);
     }
 
     [HttpPut("{visitId}/complete")]
-    [Authorize(Roles = "Standard")]
+    [Authorize]
     public async Task<IActionResult> CompleteVisit(Guid visitId)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         await _visitService.CompleteVisitAsync(userId, visitId);
-        return Ok(new { message = "Visit marked as completed" });
+        return Ok();
     }
 }

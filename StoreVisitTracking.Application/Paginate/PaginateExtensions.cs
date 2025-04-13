@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using StoreVisitTracking.Application.Messages;
 
 namespace StoreVisitTracking.Application.Paginate
 {
@@ -11,8 +12,8 @@ namespace StoreVisitTracking.Application.Paginate
             int pageSize,
             CancellationToken cancellationToken = default)
         {
-            if (pageIndex < 0) throw new ArgumentException("Page index must be greater than or equal to 0", nameof(pageIndex));
-            if (pageSize <= 0) throw new ArgumentException("Page size must be greater than 0", nameof(pageSize));
+            if (pageIndex < 0) throw new ArgumentException(ApplicationMessages.PageIndexMustBeGreaterThanOrEqualToZero, nameof(pageIndex));
+            if (pageSize <= 0) throw new ArgumentException(ApplicationMessages.PageSizeMustBeGreaterThanZero, nameof(pageSize));
 
             var totalCount = await source.CountAsync(cancellationToken);
 

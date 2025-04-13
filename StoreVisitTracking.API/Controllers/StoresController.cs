@@ -1,6 +1,6 @@
-﻿// StoresController.cs
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoreVisitTracking.API.Messages;
 using StoreVisitTracking.Application.DTOs.Store;
 using StoreVisitTracking.Application.Interfaces;
 using StoreVisitTracking.Application.Paginate;
@@ -42,7 +42,7 @@ public class StoresController : ControllerBase
     {
         await _storeService.CreateAsync(dto);
         await _cacheService.RemoveByPrefixAsync(StoresCachePrefix);
-        return Ok(new { message = "Store created successfully" });
+        return Ok(APIMessages.StoreCreatedSuccesfully);
     }
 
     [HttpPut("{storeId}")]
@@ -51,7 +51,7 @@ public class StoresController : ControllerBase
     {
         await _storeService.UpdateAsync(storeId, dto);
         await _cacheService.RemoveByPrefixAsync(StoresCachePrefix);
-        return Ok(new { message = "Store updated successfully" });
+        return Ok();
     }
 
     [HttpDelete("{storeId}")]
@@ -60,6 +60,6 @@ public class StoresController : ControllerBase
     {
         await _storeService.DeleteAsync(storeId);
         await _cacheService.RemoveByPrefixAsync(StoresCachePrefix);
-        return Ok(new { message = "Store deleted successfully" });
+        return Ok();
     }
 }

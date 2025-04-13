@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoreVisitTracking.API.Messages;
 using StoreVisitTracking.Application.DTOs.Product;
 using StoreVisitTracking.Application.Paginate;
 
@@ -15,7 +16,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] PageRequest pageRequest)
     {
         var result = await _productService.GetAllAsync(pageRequest);
@@ -23,10 +24,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
     {
         await _productService.CreateAsync(dto);
-        return Ok(new { message = "Product created successfully" });
+        return Ok(APIMessages.ProductCreatedSuccesfully);
     }
 }

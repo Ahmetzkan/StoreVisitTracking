@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using StoreVisitTracking.Domain.Entities;
 using System.Reflection;
@@ -15,7 +15,7 @@ namespace StoreVisitTracking.Infrastructure
         public DbSet<Product> Products { get; set; }
         public DbSet<Photo> Photos { get; set; }
 
-        public StoreVisitTrackingDbContext(DbContextOptions<StoreVisitTrackingDbContext> options, IConfiguration configuration)
+        public StoreVisitTrackingDbContext(DbContextOptions<StoreVisitTrackingDbContext> options, IConfiguration configuration = null)
                : base(options)
         {
             _configuration = configuration;
@@ -25,5 +25,10 @@ namespace StoreVisitTracking.Infrastructure
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());  
         }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(cancellationToken);
+        }
     }
-}
+} 
