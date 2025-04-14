@@ -1,5 +1,74 @@
 # Store Visit Tracking
 
+[Jump to Turkish Version](#türkçe-versiyon)
+
+## English Version
+
+This project is a web application for tracking store visits, developed using .NET 8.0.
+- Services were originally intended to run in Docker, but due to time constraints and an unresolved error, the services currently run locally.
+
+### Requirements
+- .NET 8.0 SDK
+- Visual Studio 2022 or Visual Studio Code
+- MySQL Server
+- Redis Server
+- Git
+
+### Installation
+1. Clone the project:
+git clone [repository-url]
+cd StoreVisitTracking
+
+2. Set up MySQL database:
+CREATE DATABASE storevisittrackingdb;
+CREATE USER 'root'@'localhost' IDENTIFIED BY 'root';
+GRANT ALL PRIVILEGES ON storevisittrackingdb.* TO 'root'@'localhost';
+FLUSH PRIVILEGES;
+
+3. Import database:
+- Download DB file: https://drive.google.com/file/d/1Gziu8Ecb61Tuf5UhXX7Re8jirfuGxqH1/view
+- Import using MySQL Workbench
+
+4. Install Redis:
+- Install Redis Server
+- Ensure service is running
+
+5. Configure project:
+- Verify appsettings.json connections:
+  - Server: localhost
+  - Port: 3306
+  - Database: storevisittrackingdb
+  - Username: root
+  - Password: root
+
+6. Run the project:
+dotnet run --project StoreVisitTracking.API
+
+### Access
+https://localhost:7047/swagger
+
+Note: For Swagger authorization, use the token from login response.
+
+### Testing
+cd StoreVisitTracking.Tests
+dotnet test
+
+✅ All tests pass (18 tests)
+
+#### Unit Test Results
+![Test Explorer Results](docs/images/test-results.png)
+
+#### Redis Cache Test Results
+![Redis Test Results](docs/images/redis-results.png)
+
+#### Swagger UI
+![Swagger UI](docs/images/swagger-results.png)
+
+<a id="türkçe-versiyon"></a>
+## Türkçe Versiyon
+
+# Store Visit Tracking
+
 Bu proje, mağaza ziyaretlerinin takibini sağlayan bir web uygulamasıdır. .NET 8.0 kullanılarak geliştirilmiştir.
 - Servisler normalde dockerda ayağa kaldırılıcaktı fakat vaktimin kalmaması nedeniyle çokca uğraştığım bir hatayı çözmeye zamanım kalmadı. Bundan kaynaklı servisler local de çalışmaktadır.
 
